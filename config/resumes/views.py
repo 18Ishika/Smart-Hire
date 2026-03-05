@@ -8,7 +8,13 @@ from .serializers import ResumeSerializer
 from jobs.models import Job
 
 from .tasks import process_resume_task  # Import your task
-
+class HomeView(APIView):
+    def get(self, request):
+        data = {
+            "title": "Welcome",
+            "message": "Home data from Django backend"
+        }
+        return Response(data)
 
 class ResumeUploadView(APIView):
     def post(self, request):

@@ -1,10 +1,7 @@
-
-const App = () => {
-  return (
-    <div>
-      <h1>Hello from react and django</h1>
-    </div>
-  )
+import React from 'react'
+import Home from './pages/Home'
+function App(){
+  return <Home/>
 }
 
 export default App

@@ -16,12 +16,13 @@ function Login() {
         username,
         password,
       });
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       console.log(res.data);
       alert("Login successful");
 
       // 👉 redirect after login
-      navigate("/dashboard");
+      navigate("/Home");
 
     } catch (err) {
       console.log(err.response?.data);

@@ -9,27 +9,29 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await loginUser({
-        username,
-        password,
-      });
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+  try {
+    const res = await loginUser({
+      username,
+      password,
+    });
 
-      console.log(res.data);
-      alert("Login successful");
+    // ✅ store tokens
+    localStorage.setItem("access", res.data.access);
+    localStorage.setItem("refresh", res.data.refresh);
 
-      // 👉 redirect after login
-      navigate("/Home");
+    console.log(res.data);
+    alert("Login successful");
 
-    } catch (err) {
-      console.log(err.response?.data);
-      alert("Invalid credentials");
-    }
-  };
+    navigate("/");
+    window.location.reload();
 
+  } catch (err) {
+    console.log(err.response?.data);
+    alert("Invalid credentials");
+  }
+};
   return (
     <div className="login-container">
       <div className="login-card">

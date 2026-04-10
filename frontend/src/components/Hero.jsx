@@ -15,7 +15,7 @@ function Hero() {
           best candidates for your job description.
         </p>
 
-        <button onClick={() => navigate("/signup")}>
+        <button onClick={() => navigate("/job")}>
           Start Hiring
         </button>
 

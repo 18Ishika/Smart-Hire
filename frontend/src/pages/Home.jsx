@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Feature from "../components/Feature";
 import HowItWorks from "../components/Work";
+import Dashboard from "./dashboard";
 
 function Home() {
-
+  const token = localStorage.getItem("access");
 
   return (
     <div>
-
       <Navbar />
 
-    
-
-      <Hero />
-      <Feature />
-      <HowItWorks />
-
+      {token ? (
+        <Dashboard />
+      ) : (
+        <>
+          <Hero />
+          <Feature />
+          <HowItWorks />
+        </>
+      )}
     </div>
   );
 }

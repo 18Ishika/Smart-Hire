@@ -1,0 +1,63 @@
+/* PAGE */
+
+.job-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  background: #dfeff2;
+  min-height: 100vh;
+}
+
+/* CARD */
+
+.job-card {
+  width: 420px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.job-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* INPUTS */
+
+.job-card input,
+.job-card textarea,
+.job-card select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* TEXTAREA SIZE */
+
+.job-card textarea {
+  resize: none;
+  height: 80px;
+}
+
+/* BUTTON */
+
+.job-card button {
+  width: 100%;
+  padding: 14px;
+  background: #2c7a7b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.job-card button:hover {
+  background: #1f5c5e;
+}

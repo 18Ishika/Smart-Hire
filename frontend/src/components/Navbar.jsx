@@ -1,56 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import "../styles/Navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("access");
 
-  // ✅ state to track login
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // ✅ check token when component loads
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    setIsLoggedIn(!!token);
-  }, []);
-
-  // ✅ logout function
   const handleLogout = () => {
     localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-
-    setIsLoggedIn(false); // update UI
     navigate("/login");
   };
 
   return (
     <nav className="navbar">
 
-      <div className="logo">
-        SmartHire
+      <div className="logo" onClick={() => navigate("/")}>
+        HireAI
       </div>
 
       <ul className="nav-links">
-        <li onClick={() => navigate("/")}>Home</li>
-        <li>Features</li>
-        <li>Pricing</li>
+        {token && (
+          <>
+            <li onClick={() => navigate("/")}>Dashboard</li>
+            <li onClick={() => navigate("/job")}>Create Job</li>
+            <li onClick={() => navigate("/list")}>My Jobs</li>
+            <li onClick={() => navigate("/profile")}>Profile</li>
+          </>
+        )}
       </ul>
 
-      <div>
-        {isLoggedIn ? (
-          <>
-            {/* 👤 profile icon */}
-            <span
-              style={{ marginRight: "15px", cursor: "pointer" }}
-              onClick={() => navigate("/profile")}
-            >
-              👤
-            </span>
-
-            {/* 🚪 logout button */}
-            <button onClick={handleLogout}>
-              Logout
-            </button>
-          </>
+      <div className="nav-actions">
+        {token ? (
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         ) : (
           <>
             <button
@@ -61,8 +43,7 @@ function Navbar() {
             </button>
 
             <button
-              className="login-btn"
-              style={{ marginLeft: "10px" }}
+              className="signup-btn"
               onClick={() => navigate("/signup")}
             >
               Signup

@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'is_staff']
+        fields = ['id', 'username', 'email', 'password']
 
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
@@ -21,7 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
                 username=validated_data['username'],
                 email=validated_data.get('email', ''),
                 password=validated_data['password'],
-                is_staff=validated_data.get('is_staff', False)
             )
             return user
         except IntegrityError:

@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import Resume
 from .serializers import ResumeSerializer
 from jobs.models import Job
+from rest_framework.permissions import IsAuthenticated
 
 from .tasks import process_resume_task  # Import your task
 class HomeView(APIView):
@@ -17,9 +18,10 @@ class HomeView(APIView):
         return Response(data)
 
 class ResumeUploadView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         job_id = request.data.get('job')
-        job = get_object_or_404(Job, id=job_id)
+        job = get_object_or_404(Job, id=job_id, created_by=request.user)
         files = request.FILES.getlist('resume_file')
 
         if not files:
@@ -56,6 +58,7 @@ class JobRankingsView(APIView):
     def get(self,request,job_id):
         top_resumes = Resume.objects.filter(
             job_id=job_id,
+            job__created_by=request.user,
             status="Processed"
         ).order_by('-score')[:5]
         serializer = ResumeSerializer(top_resumes, many=True)

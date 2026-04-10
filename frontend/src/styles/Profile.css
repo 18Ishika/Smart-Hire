@@ -1,0 +1,57 @@
+/* PROFILE PAGE */
+
+.profile-container{
+  padding:60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.profile-title{
+  font-size:34px;
+  margin-bottom:30px;
+}
+
+/* CARD */
+
+.profile-card{
+  background:white;
+  padding:30px;
+  width:350px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  transition:all 0.25s ease;
+}
+
+.profile-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* TEXT */
+
+.profile-card p{
+  font-size:16px;
+  margin:12px 0;
+  color:#333;
+}
+
+/* BUTTON */
+
+.logout-btn{
+  margin-top:20px;
+  width:100%;
+  padding:12px;
+  background:#2c7a7b;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:all 0.2s ease;
+}
+
+.logout-btn:hover{
+  background:#1f5c5e;
+  transform:translateY(-1px);
+}

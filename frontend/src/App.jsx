@@ -7,6 +7,8 @@ import Signup from './pages/signup'
 import Profile from './pages/profile'
 import Job from './pages/job'
 import View from './pages/view'
+import Upload from './pages/upload'
+import Dashboard from './pages/dashboard'
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/job" element={<Job />} />
         <Route path="/list" element={<View />} />
+        <Route path="/list/:id/upload" element={<Upload />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   )

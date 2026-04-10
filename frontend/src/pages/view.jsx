@@ -63,8 +63,18 @@ function ViewJob() {
 
                 <div className="actions">
 
-                  <button className="delete-btn">Delete</button>
-                </div>
+                <button
+                  className="upload-btn"
+                  onClick={() => navigate(`/list/${job.id}/upload`)}
+                >
+                  Upload Resumes
+                </button>
+
+                <button className="delete-btn">
+                  Delete
+                </button>
+
+              </div>
               </div>
 
             </div>

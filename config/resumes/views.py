@@ -57,10 +57,9 @@ class ResumeUploadView(APIView):
 class JobRankingsView(APIView):
     def get(self,request,job_id):
         top_resumes = Resume.objects.filter(
-            job_id=job_id,
-            job__created_by=request.user,
-            status="Processed"
-        ).order_by('-score')[:5]
+        job_id=job_id,
+        job__created_by=request.user
+    ).order_by('-score')
         serializer = ResumeSerializer(top_resumes, many=True)
         return Response({
             "job_id": job_id,

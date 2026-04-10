@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
 
+
 function Dashboard() {
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ function Dashboard() {
 
         <div
           className="dashboard-card"
-          onClick={() => navigate("/job")}
+          onClick={() => navigate("/list")}
         >
           <img
             src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"

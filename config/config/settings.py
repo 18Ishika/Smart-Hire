@@ -150,3 +150,4 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),  
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+GEMINI_API_KEY = "AIzaSyCpmkeRzrnn0VX1OKdmToMj4691urvGIcg"

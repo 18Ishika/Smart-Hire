@@ -1,63 +1,89 @@
 /* PAGE */
-
 .job-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 60px;
-  background: #dfeff2;
+  background: linear-gradient(135deg, #e6f4f5, #dff1f2);
   min-height: 100vh;
+  font-family: "Inter", sans-serif;
 }
 
 /* CARD */
-
 .job-card {
-  width: 420px;
+  width: 450px;
   background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  border-top: 5px solid #2c7a7b;
+  transition: 0.3s;
 }
 
+.job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+}
+
+/* TITLE */
 .job-card h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   text-align: center;
+  color: #184a4b;
+  font-size: 22px;
 }
 
 /* INPUTS */
-
 .job-card input,
 .job-card textarea,
 .job-card select {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 13px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
+  transition: all 0.2s ease;
+  background: #f9fbfb;
 }
 
-/* TEXTAREA SIZE */
+/* INPUT FOCUS EFFECT */
+.job-card input:focus,
+.job-card textarea:focus,
+.job-card select:focus {
+  outline: none;
+  border-color: #2c7a7b;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(44,122,123,0.15);
+}
 
+/* TEXTAREA */
 .job-card textarea {
   resize: none;
-  height: 80px;
+  height: 100px;
 }
 
 /* BUTTON */
-
 .job-card button {
   width: 100%;
   padding: 14px;
-  background: #2c7a7b;
+  background: linear-gradient(135deg, #2c7a7b, #1f5c5e);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.25s ease;
+  font-size: 15px;
 }
 
+/* BUTTON HOVER */
 .job-card button:hover {
-  background: #1f5c5e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(44,122,123,0.3);
+}
+
+/* BUTTON ACTIVE */
+.job-card button:active {
+  transform: scale(0.98);
 }

@@ -5,14 +5,23 @@ import "../styles/Upload.css";
 
 function Upload() {
   const { id: jobId } = useParams();
+
   const [files, setFiles] = useState([]);
   const [resumes, setResumes] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const resumesPerPage = 3; // 🔥 adjust if needed
 
-  const BASE_URL = "http://127.0.0.1:8000"; // for PDF fix
+  const [explanations, setExplanations] = useState({});
+  const [loadingExplain, setLoadingExplain] = useState({});
 
+  const [topReport, setTopReport] = useState([]);
+  const [loadingReport, setLoadingReport] = useState(false);
+  const [topN, setTopN] = useState(5);
+  const [showReport, setShowReport] = useState(false);
+
+  const resumesPerPage = 3;
+  const BASE_URL = "http://127.0.0.1:8000";
+
+  // ---------------- FETCH ----------------
   const fetchResumes = async () => {
     try {
       const res = await api.get(`/api/resumes/rankings/${jobId}/`);
@@ -25,7 +34,38 @@ function Upload() {
   useEffect(() => {
     if (jobId) fetchResumes();
   }, [jobId]);
+  const handleDownloadReport = () => {
+  if (!topReport.length) return;
 
+  const lines = topReport.map((candidate, i) => {
+    return [
+      `#${i + 1} ${candidate.filename}`,
+      `Score: ${candidate.score}%`,
+      candidate.email ? `Email: ${candidate.email}` : "Email: N/A",
+      candidate.phone ? `Phone: ${candidate.phone}` : "Phone: N/A",
+      `Analysis: ${candidate.explanation}`,
+      "─".repeat(60),
+    ].join("\n");
+  });
+
+  const content = [
+    "TOP CANDIDATES REPORT",
+    `Job ID: ${jobId}`,
+    `Generated: ${new Date().toLocaleString()}`,
+    "═".repeat(60),
+    "",
+    ...lines,
+  ].join("\n");
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `top_candidates_job_${jobId}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+  // ---------------- FILE HANDLING ----------------
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
   };
@@ -43,24 +83,74 @@ function Upload() {
       });
 
       setFiles([]);
-      setCurrentPage(1); // reset page
+      setCurrentPage(1);
       fetchResumes();
     } catch (err) {
       alert("Upload failed");
     }
   };
 
-  // ✅ SORT FIRST
+  // ---------------- EXPLANATION ----------------
+  const handleExplain = async (resumeId) => {
+    if (explanations[resumeId] !== undefined) {
+      setExplanations((prev) => ({
+        ...prev,
+        [resumeId]: undefined,
+      }));
+      return;
+    }
+
+    setLoadingExplain((prev) => ({ ...prev, [resumeId]: true }));
+
+    try {
+      const res = await api.get(`/api/resumes/${resumeId}/explain/`);
+      setExplanations((prev) => ({
+        ...prev,
+        [resumeId]: res.data.explanation,
+      }));
+    } catch (err) {
+      setExplanations((prev) => ({
+        ...prev,
+        [resumeId]: "Could not fetch explanation.",
+      }));
+    } finally {
+      setLoadingExplain((prev) => ({
+        ...prev,
+        [resumeId]: false,
+      }));
+    }
+  };
+
+  // ---------------- TOP REPORT ----------------
+  const handleTopReport = async () => {
+    setLoadingReport(true);
+    setShowReport(false);
+
+    try {
+      const res = await api.get(
+        `/api/resumes/rankings/${jobId}/top-candidates/?top_n=${topN}`
+      );
+
+      setTopReport(res.data.report || []);
+      setShowReport(true);
+    } catch (err) {
+      alert("Could not fetch report");
+    } finally {
+      setLoadingReport(false);
+    }
+  };
+
+  // ---------------- SORT + PAGINATION ----------------
   const sortedResumes = [...resumes].sort(
     (a, b) => (b.score ?? -1) - (a.score ?? -1)
   );
 
-  // ✅ PAGINATION LOGIC
   const totalPages = Math.ceil(sortedResumes.length / resumesPerPage);
   const indexOfLast = currentPage * resumesPerPage;
   const indexOfFirst = indexOfLast - resumesPerPage;
   const currentResumes = sortedResumes.slice(indexOfFirst, indexOfLast);
 
+  // ---------------- UI ----------------
   return (
     <div className="upload-page">
 
@@ -91,6 +181,55 @@ function Upload() {
           Upload & Process
         </button>
       </div>
+
+      {/* TOP REPORT */}
+      {sortedResumes.length > 0 && (
+        <div className="report-box">
+          <h2>📊 Top Candidates Report</h2>
+
+          <div className="report-controls">
+            <label>Show top</label>
+            <select value={topN} onChange={(e) => setTopN(Number(e.target.value))}>
+              <option value={3}>3</option>
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+            </select>
+
+           
+            <button
+              className="report-btn"
+              onClick={handleTopReport}
+              disabled={loadingReport}
+            >
+              {loadingReport ? "Generating..." : "Get Report"}
+            </button>
+
+            {showReport && topReport.length > 0 && (
+              <button className="download-btn" onClick={handleDownloadReport}>
+                ⬇ Download Report
+              </button>
+            )}
+          </div>
+
+          {showReport && topReport.length > 0 && (
+            <div className="report-list">
+              {topReport.map((c, i) => (
+                <div key={c.resume_id} className="report-card">
+                  <div className="report-rank">#{i + 1}</div>
+
+                  <div className="report-details">
+                    <h3>{c.filename}</h3>
+                    <p>⭐ Score: {c.score}%</p>
+                    {c.email && <p>📧 {c.email}</p>}
+                    {c.phone && <p>📞 {c.phone}</p>}
+                    <p className="report-explanation">{c.explanation}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* RESUMES */}
       <div className="resume-section">
@@ -123,8 +262,10 @@ function Upload() {
                         : r.status}
                     </div>
 
+                    {/* ✅ FIXED LINK */}
                     {r.resume_file && (
                       <a
+                        className="resume-link"
                         href={
                           r.resume_file.startsWith("http")
                             ? r.resume_file
@@ -137,15 +278,36 @@ function Upload() {
                       </a>
                     )}
 
+                    {/* EXPLAIN BUTTON */}
+                    {r.status === "Processed" && (
+                      <button
+                        className="explain-btn"
+                        onClick={() => handleExplain(r.id)}
+                        disabled={loadingExplain[r.id]}
+                      >
+                        {loadingExplain[r.id]
+                          ? "Loading..."
+                          : explanations[r.id]
+                          ? "Hide Explanation"
+                          : "Why this rank?"}
+                      </button>
+                    )}
+
+                    {/* EXPLANATION */}
+                    {explanations[r.id] && (
+                      <div className="explanation">
+                        {explanations[r.id]}
+                      </div>
+                    )}
+
                   </div>
                 );
               })}
             </div>
 
-            {/* ✅ PAGINATION (only if needed) */}
+            {/* PAGINATION */}
             {sortedResumes.length > resumesPerPage && (
               <div className="pagination">
-
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => p - 1)}
@@ -169,7 +331,6 @@ function Upload() {
                 >
                   →
                 </button>
-
               </div>
             )}
           </>

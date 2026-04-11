@@ -1,11 +1,11 @@
 /* PAGE CONTAINER */
 .jobs-container {
   padding: 60px;
-  background: #dfeff2;
+  background: linear-gradient(135deg, #e8f5f6, #dff1f2);
   min-height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  font-family: Arial;
+  font-family: "Inter", Arial, sans-serif;
 }
 
 /* HEADER */
@@ -13,64 +13,81 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(44, 122, 123, 0.2);
+  margin-bottom: 45px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(44, 122, 123, 0.15);
 }
 
 .jobs-header h2 {
-  font-size: 30px;
-  margin-bottom: 5px;
-  color: #1f5c5e;
+  font-size: 32px;
+  margin-bottom: 6px;
+  color: #184a4b;
+  font-weight: 700;
 }
 
 .jobs-header p {
   color: #2c7a7b;
   font-size: 14px;
+  opacity: 0.85;
 }
 
 /* CREATE BUTTON */
 .create-btn {
-  background: #2c7a7b;
+  background: linear-gradient(135deg, #2c7a7b, #1f5c5e);
   color: white;
-  padding: 11px 20px;
+  padding: 11px 22px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(44, 122, 123, 0.2);
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 14px rgba(44, 122, 123, 0.25);
 }
 
 .create-btn:hover {
-  background: #1f5c5e;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(44, 122, 123, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(44, 122, 123, 0.35);
 }
 
 /* GRID */
 .jobs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 22px;
+  gap: 24px;
 }
 
 /* CARD */
 .job-card {
   background: white;
   padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  transition: all 0.25s ease;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-top: 4px solid #2c7a7b;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle glow on hover */
+.job-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(44,122,123,0.1), transparent);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.job-card:hover::after {
+  opacity: 1;
 }
 
 .job-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 35px rgba(0,0,0,0.12);
 }
 
 /* TOP SECTION */
@@ -82,39 +99,40 @@
 
 .job-top h3 {
   margin: 0;
-  font-size: 18px;
-  color: #1f5c5e;
+  font-size: 19px;
+  color: #184a4b;
+  font-weight: 600;
 }
 
 /* BADGE */
 .badge {
-  background: #e6f5f4;
+  background: rgba(44, 122, 123, 0.1);
   color: #2c7a7b;
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   border: 1px solid rgba(44, 122, 123, 0.2);
 }
 
 /* DESCRIPTION */
 .desc {
-  margin: 12px 0;
+  margin: 14px 0;
   font-size: 14px;
   color: #555;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* INFO */
 .job-info {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
+  border-top: 1px dashed #eee;
 }
 
 .job-info p {
   font-size: 13px;
-  margin: 4px 0;
+  margin: 5px 0;
   color: #333;
 }
 
@@ -123,7 +141,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 16px;
   font-size: 13px;
   color: #2c7a7b;
   font-weight: 600;
@@ -133,50 +151,83 @@
 .actions {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
-/* BUTTONS */
-.view-btn,
+/* BUTTON BASE */
+.upload-btn,
 .delete-btn {
   flex: 1;
   padding: 9px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-/* VIEW */
-.view-btn {
-  background: #2c7a7b;
+/* UPLOAD */
+.upload-btn {
+  background: linear-gradient(135deg, #2c7a7b, #1f5c5e);
   color: white;
 }
 
-.view-btn:hover {
-  background: #1f5c5e;
-  transform: translateY(-1px);
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(44, 122, 123, 0.3);
 }
 
 /* DELETE */
 .delete-btn {
-  background: #ff4d4d;
+  background: linear-gradient(135deg, #ff5f5f, #e60000);
   color: white;
 }
 
 .delete-btn:hover {
-  background: #e60000;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(255, 0, 0, 0.25);
 }
 
-/* EMPTY STATE (optional if you use it) */
+/* EMPTY STATE */
 .empty-state {
   text-align: center;
-  padding: 50px;
+  padding: 60px;
   background: white;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #2c7a7b;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  font-weight: 500;
+}
+
+/* PAGINATION */
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination button {
+  margin: 4px;
+  padding: 7px 12px;
+  border: none;
+  background: #e0f2f3;
+  color: #2c7a7b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover {
+  background: #2c7a7b;
+  color: white;
+}
+
+.pagination .active {
+  background: #2c7a7b;
+  color: white;
+  box-shadow: 0 4px 10px rgba(44, 122, 123, 0.3);
+}
+
+.page-arrow {
+  font-weight: bold;
 }

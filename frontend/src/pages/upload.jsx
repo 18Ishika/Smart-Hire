@@ -8,6 +8,11 @@ function Upload() {
   const [files, setFiles] = useState([]);
   const [resumes, setResumes] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const resumesPerPage = 3; // 🔥 adjust if needed
+
+  const BASE_URL = "http://127.0.0.1:8000"; // for PDF fix
+
   const fetchResumes = async () => {
     try {
       const res = await api.get(`/api/resumes/rankings/${jobId}/`);
@@ -38,15 +43,23 @@ function Upload() {
       });
 
       setFiles([]);
+      setCurrentPage(1); // reset page
       fetchResumes();
     } catch (err) {
       alert("Upload failed");
     }
   };
 
+  // ✅ SORT FIRST
   const sortedResumes = [...resumes].sort(
     (a, b) => (b.score ?? -1) - (a.score ?? -1)
   );
+
+  // ✅ PAGINATION LOGIC
+  const totalPages = Math.ceil(sortedResumes.length / resumesPerPage);
+  const indexOfLast = currentPage * resumesPerPage;
+  const indexOfFirst = indexOfLast - resumesPerPage;
+  const currentResumes = sortedResumes.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="upload-page">
@@ -57,7 +70,7 @@ function Upload() {
         <p>Upload resumes and track AI-based scoring</p>
       </div>
 
-      {/* UPLOAD CARD */}
+      {/* UPLOAD */}
       <div className="upload-box">
         <h2>📤 Upload Resumes</h2>
 
@@ -69,9 +82,7 @@ function Upload() {
         {files.length > 0 && (
           <div className="file-list">
             {files.map((f, i) => (
-              <span key={i} className="file-chip">
-                {f.name}
-              </span>
+              <span key={i} className="file-chip">{f.name}</span>
             ))}
           </div>
         )}
@@ -81,45 +92,87 @@ function Upload() {
         </button>
       </div>
 
-      {/* RESUME LIST */}
+      {/* RESUMES */}
       <div className="resume-section">
         <h2>🏆 Ranked Resumes</h2>
 
         {sortedResumes.length === 0 ? (
-          <div className="empty-state">
-            No resumes processed yet
-          </div>
+          <div className="empty-state">No resumes processed yet</div>
         ) : (
-          <div className="resume-grid">
-            {sortedResumes.map((r, index) => (
-              <div key={r.id} className="resume-card">
+          <>
+            <div className="resume-grid">
+              {currentResumes.map((r, index) => {
+                const rank = indexOfFirst + index + 1;
 
-                <div className="rank-badge">
-                  #{index + 1}
-                </div>
+                return (
+                  <div key={r.id} className="resume-card">
 
-                <h3>{r.actual_resume_file_name}</h3>
+                    <div className="rank-badge">#{rank}</div>
 
-                <div className="score">
-                  ⭐ {r.score !== null ? r.score : "Processing..."}
-                </div>
+                    <h3>{r.actual_resume_file_name}</h3>
 
-                <div className={`status ${r.status?.toLowerCase()}`}>
-                  {r.status === "Processed"
-                    ? "✔ Processed"
-                    : r.status === "Pending"
-                    ? "⏳ Pending"
-                    : r.status}
-                </div>
+                    <div className="score">
+                      ⭐ {r.score !== null ? r.score : "Processing..."}
+                    </div>
 
-                {r.resume_file && (
-                  <a href={r.resume_file} target="_blank">
-                    View Resume →
-                  </a>
-                )}
+                    <div className={`status ${r.status?.toLowerCase()}`}>
+                      {r.status === "Processed"
+                        ? "✔ Processed"
+                        : r.status === "Pending"
+                        ? "⏳ Pending"
+                        : r.status}
+                    </div>
+
+                    {r.resume_file && (
+                      <a
+                        href={
+                          r.resume_file.startsWith("http")
+                            ? r.resume_file
+                            : `${BASE_URL}${r.resume_file}`
+                        }
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View Resume →
+                      </a>
+                    )}
+
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* ✅ PAGINATION (only if needed) */}
+            {sortedResumes.length > resumesPerPage && (
+              <div className="pagination">
+
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  ←
+                </button>
+
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    className={currentPage === i + 1 ? "active" : ""}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  →
+                </button>
+
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 

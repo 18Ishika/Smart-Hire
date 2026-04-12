@@ -10,18 +10,18 @@ function Upload() {
   const [resumes, setResumes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [jobTitle, setJobTitle] = useState(""); // ✅ NEW
+
   const [explanations, setExplanations] = useState({});
   const [loadingExplain, setLoadingExplain] = useState({});
 
-  const [topReport, setTopReport] = useState([]);
-  const [loadingReport, setLoadingReport] = useState(false);
-  const [topN, setTopN] = useState(5);
-  const [showReport, setShowReport] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   const resumesPerPage = 3;
   const BASE_URL = "http://127.0.0.1:8000";
 
-  // ---------------- FETCH ----------------
+  // ---------------- FETCH RESUMES ----------------
   const fetchResumes = async () => {
     try {
       const res = await api.get(`/api/resumes/rankings/${jobId}/`);
@@ -31,40 +31,23 @@ function Upload() {
     }
   };
 
+  // ---------------- FETCH JOB ----------------
+  const fetchJobDetails = async () => {
+    try {
+      const res = await api.get(`/api/jobs/${jobId}/`);
+      setJobTitle(res.data.title || "Untitled Job");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    if (jobId) fetchResumes();
+    if (jobId) {
+      fetchResumes();
+      fetchJobDetails();
+    }
   }, [jobId]);
-  const handleDownloadReport = () => {
-  if (!topReport.length) return;
 
-  const lines = topReport.map((candidate, i) => {
-    return [
-      `#${i + 1} ${candidate.filename}`,
-      `Score: ${candidate.score}%`,
-      candidate.email ? `Email: ${candidate.email}` : "Email: N/A",
-      candidate.phone ? `Phone: ${candidate.phone}` : "Phone: N/A",
-      `Analysis: ${candidate.explanation}`,
-      "─".repeat(60),
-    ].join("\n");
-  });
-
-  const content = [
-    "TOP CANDIDATES REPORT",
-    `Job ID: ${jobId}`,
-    `Generated: ${new Date().toLocaleString()}`,
-    "═".repeat(60),
-    "",
-    ...lines,
-  ].join("\n");
-
-  const blob = new Blob([content], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `top_candidates_job_${jobId}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-};
   // ---------------- FILE HANDLING ----------------
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
@@ -121,25 +104,6 @@ function Upload() {
     }
   };
 
-  // ---------------- TOP REPORT ----------------
-  const handleTopReport = async () => {
-    setLoadingReport(true);
-    setShowReport(false);
-
-    try {
-      const res = await api.get(
-        `/api/resumes/rankings/${jobId}/top-candidates/?top_n=${topN}`
-      );
-
-      setTopReport(res.data.report || []);
-      setShowReport(true);
-    } catch (err) {
-      alert("Could not fetch report");
-    } finally {
-      setLoadingReport(false);
-    }
-  };
-
   // ---------------- SORT + PAGINATION ----------------
   const sortedResumes = [...resumes].sort(
     (a, b) => (b.score ?? -1) - (a.score ?? -1)
@@ -157,7 +121,13 @@ function Upload() {
       {/* HEADER */}
       <div className="page-header">
         <h1>Resume Ranking Dashboard</h1>
-        <p>Upload resumes and track AI-based scoring</p>
+
+        <p>
+          Job: <strong>{jobTitle || "Loading..."}</strong>
+          <span style={{ marginLeft: "10px", opacity: 0.7 }}>
+            (ID: {jobId})
+          </span>
+        </p>
       </div>
 
       {/* UPLOAD */}
@@ -182,55 +152,6 @@ function Upload() {
         </button>
       </div>
 
-      {/* TOP REPORT */}
-      {sortedResumes.length > 0 && (
-        <div className="report-box">
-          <h2>📊 Top Candidates Report</h2>
-
-          <div className="report-controls">
-            <label>Show top</label>
-            <select value={topN} onChange={(e) => setTopN(Number(e.target.value))}>
-              <option value={3}>3</option>
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-            </select>
-
-           
-            <button
-              className="report-btn"
-              onClick={handleTopReport}
-              disabled={loadingReport}
-            >
-              {loadingReport ? "Generating..." : "Get Report"}
-            </button>
-
-            {showReport && topReport.length > 0 && (
-              <button className="download-btn" onClick={handleDownloadReport}>
-                ⬇ Download Report
-              </button>
-            )}
-          </div>
-
-          {showReport && topReport.length > 0 && (
-            <div className="report-list">
-              {topReport.map((c, i) => (
-                <div key={c.resume_id} className="report-card">
-                  <div className="report-rank">#{i + 1}</div>
-
-                  <div className="report-details">
-                    <h3>{c.filename}</h3>
-                    <p>⭐ Score: {c.score}%</p>
-                    {c.email && <p>📧 {c.email}</p>}
-                    {c.phone && <p>📞 {c.phone}</p>}
-                    <p className="report-explanation">{c.explanation}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
       {/* RESUMES */}
       <div className="resume-section">
         <h2>🏆 Ranked Resumes</h2>
@@ -242,6 +163,7 @@ function Upload() {
             <div className="resume-grid">
               {currentResumes.map((r, index) => {
                 const rank = indexOfFirst + index + 1;
+                const fileUrl = `${BASE_URL}/api/resumes/view-resume/${r.id}/`;
 
                 return (
                   <div key={r.id} className="resume-card">
@@ -262,23 +184,16 @@ function Upload() {
                         : r.status}
                     </div>
 
-                    {/* ✅ FIXED LINK */}
-                    {r.resume_file && (
-                      <a
-                        className="resume-link"
-                        href={
-                          r.resume_file.startsWith("http")
-                            ? r.resume_file
-                            : `${BASE_URL}${r.resume_file}`
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View Resume →
-                      </a>
-                    )}
+                    <button
+                      className="resume-link"
+                      onClick={() => {
+                        setSelectedPdf(fileUrl);
+                        setPdfLoading(true);
+                      }}
+                    >
+                      View Resume →
+                    </button>
 
-                    {/* EXPLAIN BUTTON */}
                     {r.status === "Processed" && (
                       <button
                         className="explain-btn"
@@ -293,7 +208,6 @@ function Upload() {
                       </button>
                     )}
 
-                    {/* EXPLANATION */}
                     {explanations[r.id] && (
                       <div className="explanation">
                         {explanations[r.id]}
@@ -308,12 +222,7 @@ function Upload() {
             {/* PAGINATION */}
             {sortedResumes.length > resumesPerPage && (
               <div className="pagination">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => p - 1)}
-                >
-                  ←
-                </button>
+                <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>←</button>
 
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button
@@ -325,17 +234,42 @@ function Upload() {
                   </button>
                 ))}
 
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => p + 1)}
-                >
-                  →
-                </button>
+                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>→</button>
               </div>
             )}
           </>
         )}
       </div>
+
+      {/* PDF MODAL */}
+      {selectedPdf && (
+        <div className="pdf-modal">
+          <div className="pdf-container">
+
+            <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+              <button className="download-btn" onClick={() => setSelectedPdf(null)}>
+                Close ❌
+              </button>
+
+              <button
+                className="download-btn"
+                onClick={() => window.open(selectedPdf, "_blank")}
+              >
+                Open in New Tab
+              </button>
+            </div>
+
+            {pdfLoading && <p>Loading PDF...</p>}
+
+            <iframe
+              src={`${selectedPdf}#toolbar=1`}
+              title="Resume Viewer"
+              onLoad={() => setPdfLoading(false)}
+            />
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

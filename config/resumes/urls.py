@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeView, ResumeExplainView, ResumeUploadView , JobRankingsView, TopCandidatesReportView
+from .views import HomeView, ResumeExplainView, ResumeUploadView , JobRankingsView, TopCandidatesReportView, view_resume
 
 urlpatterns = [
     path('upload/', ResumeUploadView.as_view(), name='resume-upload'),
@@ -7,4 +7,5 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('<int:resume_id>/explain/', ResumeExplainView.as_view()),
     path('rankings/<int:job_id>/top-candidates/', TopCandidatesReportView.as_view()),
+    path('view-resume/<int:resume_id>/', view_resume),
 ]

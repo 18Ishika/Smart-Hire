@@ -1,3 +1,5 @@
+from django.http import FileResponse
+
 from resumes.parsers import get_resume_path, rank_resumes, process_and_score_resume, get_llm_explanation, get_top_candidates_report
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -131,3 +133,16 @@ class TopCandidatesReportView(APIView):
             "top_n": top_n,
             "report": report
         }, status=status.HTTP_200_OK)
+    
+def view_resume(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id)
+
+    response = FileResponse(
+        resume.resume_file.open('rb'),
+        content_type='application/pdf'
+    )
+    response['Content-Disposition'] = f'inline; filename="{resume.actual_resume_file_name}"'
+
+    response['X-Frame-Options'] = 'ALLOWALL'
+
+    return response

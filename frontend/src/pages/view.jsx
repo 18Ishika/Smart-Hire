@@ -19,6 +19,20 @@ function ViewJob() {
       console.log(err);
     }
   };
+  const handleDelete = async (jobId) => {
+  if (!window.confirm("Are you sure you want to delete this job?")) return;
+
+  try {
+    await api.delete(`api/jobs/delete/${jobId}/`);
+
+    // remove from UI instantly
+    setJobs((prev) => prev.filter((job) => job.id !== jobId));
+
+  } catch (err) {
+    console.log(err);
+    alert("Delete failed");
+  }
+};
 
   return (
     <div className="jobs-container">
@@ -70,7 +84,7 @@ function ViewJob() {
                   Upload Resumes
                 </button>
 
-                <button className="delete-btn">
+                <button className="delete-btn" onClick={()=> handleDelete(job.id)}>
                   Delete
                 </button>
 

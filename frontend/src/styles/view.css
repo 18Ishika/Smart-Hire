@@ -7,9 +7,7 @@
   margin: 0 auto;
   font-family: "Inter", Arial, sans-serif;
 }
-.job-card::after {
-  pointer-events: none;
-}
+
 /* HEADER */
 .jobs-header {
   display: flex;
@@ -73,7 +71,7 @@
   overflow: hidden;
 }
 
-/* subtle glow on hover */
+/* subtle glow */
 .job-card::after {
   content: "";
   position: absolute;
@@ -81,6 +79,7 @@
   background: radial-gradient(circle at top right, rgba(44,122,123,0.1), transparent);
   opacity: 0;
   transition: 0.3s;
+  pointer-events: none;
 }
 
 .job-card:hover::after {
@@ -92,7 +91,7 @@
   box-shadow: 0 16px 35px rgba(0,0,0,0.12);
 }
 
-/* TOP SECTION */
+/* TOP */
 .job-top {
   display: flex;
   justify-content: space-between;
@@ -138,11 +137,11 @@
   color: #333;
 }
 
-/* FOOTER */
+/* FOOTER FIXED */
 .job-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;   /* ✅ important fix */
+  align-items: flex-start;
   margin-top: 16px;
   font-size: 13px;
   color: #2c7a7b;
@@ -154,25 +153,26 @@
   display: flex;
   gap: 10px;
   margin-top: 12px;
+  width: 100%;
 }
 
-/* BUTTON BASE */
+/* COMMON BUTTON STYLE */
 .upload-btn,
 .delete-btn {
   flex: 1;
-  padding: 9px;
+  padding: 9px 12px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
+  color: white;
   transition: all 0.25s ease;
 }
 
-/* UPLOAD */
+/* UPLOAD BUTTON */
 .upload-btn {
   background: linear-gradient(135deg, #2c7a7b, #1f5c5e);
-  color: white;
 }
 
 .upload-btn:hover {
@@ -180,15 +180,18 @@
   box-shadow: 0 8px 18px rgba(44, 122, 123, 0.3);
 }
 
-/* DELETE */
+/* DELETE BUTTON */
 .delete-btn {
   background: linear-gradient(135deg, #ff5f5f, #e60000);
-  color: white;
 }
 
 .delete-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(255, 0, 0, 0.25);
+}
+
+.delete-btn:active {
+  transform: scale(0.97);
 }
 
 /* EMPTY STATE */
@@ -228,8 +231,4 @@
   background: #2c7a7b;
   color: white;
   box-shadow: 0 4px 10px rgba(44, 122, 123, 0.3);
-}
-
-.page-arrow {
-  font-weight: bold;
 }

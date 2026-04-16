@@ -153,3 +153,16 @@ SIMPLE_JWT = {
 }
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+GEMINI_API_KEY = config('GEMINI_API_KEY')
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+# EMAIL_HOST_USER = 'apikey'   # EXACT word
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your SendGrid API key
+
+# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL',)

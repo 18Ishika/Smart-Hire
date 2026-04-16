@@ -1,112 +1,195 @@
-# Smart Recruitment SaaS – Resume Screening Tool
+# 🚀 Smart Recruitment SaaS
 
-## 📌 Project Overview
-
-Smart Recruitment SaaS is an AI-driven resume screening and candidate shortlisting platform designed to simplify and speed up the hiring process. The system automatically parses resumes, evaluates them against job descriptions, and ranks candidates based on relevance scores.
-AWS S3 - for storing resume files.
-This project is **currently under development**, and focuses on building a scalable, backend-heavy recruitment solution with intelligent screening, asynchronous processing, and efficient data handling.
+An AI-powered recruitment platform that automates resume screening, ranking, and candidate evaluation using Machine Learning, NLP, and LLM-based insights.
 
 ---
 
-## ✨ Key Features
+## 🧠 Overview
 
-* 📄 Resume upload and storage (PDF/DOCX)
-* 🔍 Resume parsing and text extraction
-* 🧠 AI-based resume–job description matching
-* 📊 Candidate scoring and ranking
-* 🏆 Display top-N matched resumes
-* ⚡ Asynchronous resume processing using background workers
-* 🗄️ Structured data storage using MySQL
-* 🚀 Optimized performance with Redis caching
+Smart Recruitment SaaS helps recruiters quickly identify the best candidates by:
+
+* 📄 Parsing resumes (PDF/DOCX)
+* 🤖 Ranking candidates using hybrid AI scoring
+* 🧾 Extracting contact details automatically
+* 💡 Generating intelligent explanations using LLMs
+* ⚡ Handling background tasks asynchronously
 
 ---
 
-## 🛠️ Tech Stack
+## ✨ Features
+
+* 🔍 **Resume Parsing** (PDF, DOCX)
+* 📊 **Hybrid Scoring System**
+
+  * Semantic similarity (Sentence Transformers)
+  * Keyword matching (TF-IDF)
+* 📌 **Auto Candidate Ranking**
+* 📞 **Contact Extraction (Email + Phone)**
+* 🧠 **LLM-based Explanation**
+
+  * Explains why a candidate is ranked higher/lower
+* ⚙️ **Asynchronous Processing**
+
+  * Powered by Celery + Redis
+* 🧑‍💼 **Job Management Dashboard**
+* 📂 **Resume Upload & Tracking**
+* 🎯 **Top Candidate Report Generation**
+
+---
+
+## 🏗️ Tech Stack
 
 ### Backend
 
-* **Python**
-* **Django / Django REST Framework**
-* **MySQL** (Primary Database)
-* **Redis** (Caching & Message Broker)
-* **Celery** (Asynchronous Task Queue)
+* 🐍 Django + Django REST Framework
+* 🤖 Sentence Transformers (NLP)
+* 📊 Scikit-learn (TF-IDF)
+* 🧠 Gemini API (LLM explanations)
 
-### AI / NLP
+### Frontend
 
-* **Sentence Transformers** (Semantic similarity)
-* **NLP-based text preprocessing**
+* ⚛️ React.js
 
-### Tools & Libraries
+### Infrastructure
 
-* pdfplumber
-* python-docx
-* NumPy
-
----
-
-## ⚙️ System Architecture (High-Level)
-
-1. User uploads resume(s)
-2. Resume files are stored with unique identifiers
-3. Celery workers asynchronously:
-
-   * Extract resume text
-   * Parse and clean content
-   * Compute similarity scores with job description
-4. Parsed data and scores are stored in MySQL
-5. Redis is used for task queuing and caching
-6. Backend APIs return ranked candidate results
+* 🐳 Docker (containerization)
+* 🛢️ MySQL (via MySQL Workbench)
+* 🔴 Redis (message broker)
+* ⚡ Celery (background task queue)
 
 ---
 
-## 🗃️ Database Design (Simplified)
+## ⚙️ System Architecture
 
-* **Resume Table**
-
-  * Resume ID
-  * Stored file name (UUID-based)
-  * Original file name
-  * Parsed text
-  * Matching score
-  * Upload timestamp
-
-* **Job Description Table**
-
-  * Job ID
-  * Job description text
+```
+User → React Frontend → Django DRF API → Celery → Redis Queue
+                                     ↓
+                                  MySQL DB
+                                     ↓
+                              Resume Processing
+                                     ↓
+                        AI Ranking + LLM Explanation
+```
 
 ---
 
-## 🚧 Project Status
+## 🚀 How It Works
 
-🟡 **In Progress**
+1. User creates a job description
+2. Uploads multiple resumes
+3. Backend:
 
-Current focus areas:
+   * Extracts text
+   * Computes semantic similarity
+   * Matches keywords
+   * Generates hybrid score
+4. Resumes are ranked automatically
+5. On-demand:
 
-* Redis & Celery integration
-* Performance optimization for bulk resume uploads
-* Improving matching accuracy
-* API refinement and error handling
-
-Planned enhancements:
-
-* Recruiter dashboard
-* Advanced filtering (skills, experience, keywords)
-* Role-based access control
-* Cloud deployment
+   * LLM generates explanation for ranking
 
 ---
 
-## ▶️ How to Run (Development Setup)
+## 📦 Setup Instructions
 
-1. Clone the repository
-2. Create and activate a virtual environment
-3. Install dependencies
-4. Configure MySQL and Redis
-5. Run database migrations
-6. Start Django server
-7. Start Redis server
-8. Run Celery worker
+### 1️⃣ Clone the repo
+
+```bash
+git clone https://github.com/your-username/smart-recruitment-saas.git
+cd smart-recruitment-saas
+```
 
 ---
+
+### 2️⃣ Setup Environment Variables
+
+Create a `.env` file in root:
+
+```env
+DB_PASSWORD=your_mysql_password
+GEMINI_API_KEY=your_api_key
+```
+
+---
+
+### 3️⃣ Run with Docker
+
+```bash
+docker-compose up --build
+```
+
+---
+
+### 4️⃣ Apply Migrations
+
+```bash
+python manage.py migrate
+```
+
+---
+
+### 5️⃣ Run Server
+
+```bash
+python manage.py runserver
+```
+
+---
+
+### 6️⃣ Start Celery Worker
+
+```bash
+celery -A config worker -l info
+```
+
+---
+
+## 📊 Core Modules
+
+* **Resume Processing Engine**
+* **Hybrid Scoring System**
+* **LLM Explanation Engine**
+* **Job & Candidate Management API**
+* **Async Task Queue (Celery)**
+
+---
+
+## 🧠 AI Logic
+
+### Hybrid Score
+
+```
+Final Score = (0.6 × Semantic Similarity) + (0.4 × Keyword Match)
+```
+
+### LLM Explanation
+
+* Highlights strengths
+* Identifies missing skills
+* Gives final verdict (Strong / Moderate / Weak)
+
+---
+
+## 📸 Screens (Optional)
+
+<img width="1362" height="709" alt="image" src="https://github.com/user-attachments/assets/a078650d-edbd-4d84-aac7-3af5d0a9f1e5" />
+<img width="1365" height="607" alt="image" src="https://github.com/user-attachments/assets/3d4edc40-49a8-4d3f-98f3-dee10c5b7371" />
+
+
+
+
+---
+
+## 🔐 Security
+
+* Environment variables for secrets
+* JWT-based authentication
+* CORS enabled for frontend integration
+
+---
+
+
+
+
+
 

@@ -1,4 +1,4 @@
-# 🚀 Smart Recruitment SaaS
+# 🚀 Smart Hire - a advanced resume screening tool
 
 An AI-powered recruitment platform that automates resume screening, ranking, and candidate evaluation using Machine Learning, NLP, and LLM-based insights.
 

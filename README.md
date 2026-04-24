@@ -172,8 +172,10 @@ Final Score = (0.6 × Semantic Similarity) + (0.4 × Keyword Match)
 
 ## 📸 Screens (Optional)
 
-<img width="1362" height="709" alt="image" src="https://github.com/user-attachments/assets/a078650d-edbd-4d84-aac7-3af5d0a9f1e5" />
-<img width="1365" height="607" alt="image" src="https://github.com/user-attachments/assets/3d4edc40-49a8-4d3f-98f3-dee10c5b7371" />
+<img width="1365" height="636" alt="image" src="https://github.com/user-attachments/assets/c01a6b68-a2e1-49b1-8a1c-4a78daa85faa" />
+
+<img width="1356" height="725" alt="image" src="https://github.com/user-attachments/assets/33152f9e-c1b6-481f-b1eb-1286fed861be" />
+
 
 
 

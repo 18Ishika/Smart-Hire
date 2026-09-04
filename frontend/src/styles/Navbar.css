@@ -1,12 +1,20 @@
-/* NAVBAR */
+/* =====================
+   NAVBAR (FINAL)
+   ===================== */
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 60px;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 18px 80px;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(43, 76, 126, 0.08);
+  box-shadow: 0 4px 30px rgba(43, 76, 126, 0.04);
+
   position: sticky;
   top: 0;
   z-index: 100;
@@ -15,9 +23,11 @@
 /* LOGO */
 
 .logo {
-  font-size: 22px;
-  font-weight: 700;
-  cursor: pointer;
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--teal-mid), var(--teal-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* LINKS */
@@ -30,12 +40,25 @@
 
 .nav-links li {
   cursor: pointer;
+  color: var(--slate);
   font-weight: 500;
-  transition: color 0.2s ease;
+  position: relative;
 }
 
-.nav-links li:hover {
-  color: #2c7a7b;
+.nav-links li::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal-mid), var(--teal-light));
+  transition: 0.3s;
+}
+
+.nav-links li:hover::after {
+  width: 100%;
 }
 
 /* ACTION BUTTONS */
@@ -48,40 +71,26 @@
 .login-btn,
 .signup-btn,
 .logout-btn {
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 10px 20px;
   border: none;
   cursor: pointer;
+  border-radius: 5px;
   font-weight: 500;
 }
 
-/* BUTTON COLORS */
+/* BUTTON STYLES */
 
 .login-btn {
-  background: #2c7a7b;
+  background: linear-gradient(135deg, var(--teal-light), var(--teal-mid));
   color: white;
 }
 
 .signup-btn {
-  background: #e6f2f2;
-  color: #2c7a7b;
+  background: var(--teal-wash);
+  color: var(--teal-mid);
 }
 
 .logout-btn {
-  background: #ff4d4d;
+  background: #ff6f6f;
   color: white;
-}
-
-/* HOVER EFFECTS */
-
-.login-btn:hover {
-  background: #1f5c5e;
-}
-
-.signup-btn:hover {
-  background: #d0e6e6;
-}
-
-.logout-btn:hover {
-  background: #e60000;
 }

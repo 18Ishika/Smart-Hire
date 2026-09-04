@@ -9,6 +9,7 @@ import Job from './pages/job'
 import View from './pages/view'
 import Upload from './pages/upload'
 import Dashboard from './pages/dashboard'
+import Navbar from './components/Navbar'
 
 function App() {
   return (

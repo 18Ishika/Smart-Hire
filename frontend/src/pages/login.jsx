@@ -65,6 +65,7 @@ function Login() {
           <span onClick={() => navigate("/signup")}>
             Sign Up
           </span>
+          
         </p>
 
       </div>

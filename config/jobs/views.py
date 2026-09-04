@@ -30,8 +30,9 @@ class UserJobsView(APIView):
         return Response(serializer.data)
     
 class JobDetailView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, job_id):
-        job = get_object_or_404(Job, id=job_id)
+        job = get_object_or_404(Job, id=job_id,created_by=request.user)
         return Response({
             "id": job.id,
             "title": job.title

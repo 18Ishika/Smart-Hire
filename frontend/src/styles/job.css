@@ -1,89 +1,171 @@
-/* PAGE */
+/* =====================
+   JOB PAGE (ALIGNED UI)
+   ===================== */
 .job-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px;
-  background: linear-gradient(135deg, #e6f4f5, #dff1f2);
-  min-height: 100vh;
-  font-family: "Inter", sans-serif;
+  padding: 80px 20px;
+  /* Balanced layout to emphasize the card instead of heavy background saturation */
+  background: linear-gradient(180deg, var(--teal-mist) 0%, var(--teal-wash) 100%);
+  min-height: calc(100vh - 70px); /* Adjusts for global navbar height seamlessly */
+  font-family: 'DM Sans', sans-serif;
 }
 
-/* CARD */
+/* =====================
+   CARD
+   ===================== */
 .job-card {
-  width: 450px;
-  background: white;
-  padding: 35px;
-  border-radius: 18px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-  border-top: 5px solid #2c7a7b;
-  transition: 0.3s;
+  width: 480px;
+  background: var(--white);
+  padding: 45px 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(43, 76, 126, 0.06); /* Sharp container definition from the UI image */
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Elegant multi-layered accent lighting */
+.job-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--teal-dark), var(--teal-light), var(--teal-mid));
+  z-index: 2;
+}
+
+.job-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(74, 123, 176, 0.04) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .job-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-lg);
 }
 
-/* TITLE */
+/* =====================
+   TITLE
+   ===================== */
 .job-card h2 {
-  margin-bottom: 25px;
   text-align: center;
-  color: #184a4b;
-  font-size: 22px;
+  margin-bottom: 32px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--ink), var(--teal-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* INPUTS */
+/* =====================
+   INPUTS, TEXTAREAS & SELECTS
+   ===================== */
 .job-card input,
 .job-card textarea,
 .job-card select {
   width: 100%;
-  padding: 13px;
-  margin-bottom: 16px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(74, 130, 148, 0.18);
+  font-family: 'DM Sans', sans-serif;
   font-size: 14px;
-  transition: all 0.2s ease;
-  background: #f9fbfb;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--white);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
-/* INPUT FOCUS EFFECT */
+/* Placeholder text matching the dashboard kit style */
+.job-card input::placeholder,
+.job-card textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+/* Smooth, high-contrast focus indicators */
 .job-card input:focus,
 .job-card textarea:focus,
 .job-card select:focus {
   outline: none;
-  border-color: #2c7a7b;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(44,122,123,0.15);
+  border-color: var(--teal-light);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(74, 123, 176, 0.12);
 }
 
-/* TEXTAREA */
+/* Textarea handling */
 .job-card textarea {
   resize: none;
-  height: 100px;
+  height: 120px;
+  line-height: 1.6;
 }
 
-/* BUTTON */
+/* Select element native arrow padding fix */
+.job-card select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A5D6E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+/* =====================
+   BUTTON
+   ===================== */
 .job-card button {
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #2c7a7b, #1f5c5e);
-  color: white;
+  padding: 15px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--teal-light) 0%, var(--teal-mid) 100%);
+  color: var(--white);
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
   font-size: 15px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 6px 20px rgba(43, 76, 126, 0.18);
+  position: relative;
+  overflow: hidden;
 }
 
-/* BUTTON HOVER */
+.job-card button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Hover action */
 .job-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(44,122,123,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(43, 76, 126, 0.26);
 }
 
-/* BUTTON ACTIVE */
+.job-card button:hover::after {
+  opacity: 1;
+}
+
+/* Active touch state */
 .job-card button:active {
-  transform: scale(0.98);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(43, 76, 126, 0.2);
 }

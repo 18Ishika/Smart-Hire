@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 from decouple import config
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -98,7 +101,9 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
@@ -156,13 +161,18 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 GEMINI_API_KEY = config('GEMINI_API_KEY')
 X_FRAME_OPTIONS = 'ALLOWALL'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# EMAIL_HOST_USER = 'apikey'   # EXACT word
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Your SendGrid API key
-
-# DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL',)
+SPECTACULAR_SETTINGS = {
+    "TITLE": "SmartHire API",
+    "DESCRIPTION": "REST API for the SmartHire Recruitment SaaS Platform",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
